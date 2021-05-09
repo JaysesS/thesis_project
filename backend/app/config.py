@@ -1,5 +1,5 @@
-import logging
 import os
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
 class Config:
 
@@ -8,6 +8,10 @@ class Config:
     SECRET_KEY = os.urandom(128)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEST_WORD = "THIS IS DEV CONFIG?"
+    FLASK_ADMIN_SWATCH = 'superhero'
+    FLASK_ADMIN_FLUID_LAYOUT = True
+    EXPLAIN_TEMPLATE_LOADING = False
+    LOG_DIR = os.path.join(base_dir, 'logs')
     SQLALCHEMY_DATABASE_URI = None
     SQLALCHEMY_ENGINE_OPTIONS = {
         "pool_pre_ping": True,
@@ -28,8 +32,6 @@ class Config:
             uri = f"{prefix}{body}"
         else:
             uri = "postgresql+psycopg2://jayse_test:test@localhost:5432/test_db"
-        logging.error("local:", local)
-        logging.error("uri:", uri)
         return uri
 
 class DevConfig(Config):
