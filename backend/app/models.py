@@ -3,7 +3,7 @@ from flask_security import RoleMixin, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import Column, UniqueConstraint
 from sqlalchemy import MetaData
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm import relationship
 import hashlib, os
 from datetime import datetime
 
@@ -87,11 +87,6 @@ class User(db.Model, UserMixin):
         if roles_users:
             return True
         return False
-
-    @validates('email')
-    def validate_email(self, _, address):
-        assert '@' in address, f"{self} wrong email: {address}"
-        return address
 
     def set_token(self):
         new_token = User.make_hash()

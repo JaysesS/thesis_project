@@ -1,4 +1,5 @@
 import flask_admin
+import os
 from models import db, User, Role
 from admin.view import MyAdminIndexView, init_views
 
@@ -18,11 +19,16 @@ def _init_catalogs(test=False):
         if not admin_user:
             admin_user = User(name='admin')
         admin_user.set_password('123')
-        if role not in admin_user.roles:
-            admin_user.roles.append(role)
-
-        db.session.add(admin_user)
-        db.session.commit()
+    else:
+        admin_user = User.query.filter_by(name=os.environ.get("POSTGRES_USER")).first()
+        if not admin_user:
+            admin_user = User(name=os.environ.get("POSTGRES_USER"))
+        admin_user.set_password(os.environ.get("POSTGRES_PASSWORD"))
+    
+    if role not in admin_user.roles:
+        admin_user.roles.append(role)
+    db.session.add(admin_user)
+    db.session.commit()
 
 def init_admin(app):
     index_view = MyAdminIndexView(url='/admin/')
