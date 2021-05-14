@@ -41,6 +41,7 @@ class TestConfig(Config):
 
     LOCAL = True
     TEST_WORD = "THIS IS TEST CONFIG?"
+    DEBUG = True
 
     def __init__(self) -> None:
         super().__init__()

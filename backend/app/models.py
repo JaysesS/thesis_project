@@ -49,16 +49,15 @@ class Role(db.Model, RoleMixin):
 class User(db.Model, UserMixin):
 
     id = Column(db.INTEGER(), nullable=False, primary_key=True)
-    name = Column(db.VARCHAR(length=50), nullable=False, unique=True)
+    username = Column(db.VARCHAR(length=50), nullable=False, unique=True)
     email = Column(db.VARCHAR())
     password = Column(db.VARCHAR(length=255))
-    token = Column(db.VARCHAR(length=32))
     active = Column(db.Boolean(), server_default='t', default=True)
     roles = relationship('Role', secondary="roles_users",
                             backref=db.backref('users', lazy='dynamic'))
 
     def __repr__(self):
-        return f"{type(self).__name__} <{self.name}>"
+        return f"{type(self).__name__} <{self.username}>"
 
     def has_role(self, *roles):
         if len(roles) > 1:
@@ -105,8 +104,18 @@ class User(db.Model, UserMixin):
             return check_password_hash(self.password, password)
 
     @classmethod
+    def register_user(cls, username, password, email):
+        user = cls(username = username, email = email)
+        user.set_password(password)
+        user.save_to_db()
+
+    @classmethod
     def get_user_by_username(cls, username):
-        return cls.query.filter_by(name=username).first()
+        return cls.query.filter_by(username=username).first()
+
+    @classmethod
+    def get_user_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
 
     @staticmethod
     def make_hash():

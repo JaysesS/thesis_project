@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, session
 from flask_cors import CORS
+from werkzeug.utils import redirect
 
 from config import TestConfig, DevConfig
 from models import db
@@ -7,7 +8,9 @@ from auth import init_login
 from admin import init_admin, _init_catalogs
 from logger_config import init_logger
 
-from blueprints.bp_test import t_blueprint
+from blueprints.index.index import index_bp
+from blueprints.broken_email_reset.reset import reset_bp
+from blueprints.login.login import login_bp
 
 def create_app():
     
@@ -27,12 +30,15 @@ def create_app():
         db.create_all()
         _init_catalogs(test=False)
 
+    # Register blueprints
+    app.register_blueprint(index_bp)
+    app.register_blueprint(reset_bp)
+    app.register_blueprint(login_bp)
+
     # Init modules
     init_login(app)
     init_admin(app)
-
-    # Register blueprints
-    app.register_blueprint(t_blueprint)
+    
 
     return app
 
@@ -51,14 +57,17 @@ def create_test_app():
     db.init_app(app)
     @app.before_first_request
     def create_test_admin():
+        # db.drop_all()
         db.create_all()
         _init_catalogs(test=True)
+
+    # Register blueprints
+    app.register_blueprint(index_bp)
+    app.register_blueprint(reset_bp)
+    app.register_blueprint(login_bp)
 
     # Init modules
     init_login(app)
     init_admin(app)
-
-    # Register blueprints
-    app.register_blueprint(t_blueprint)
 
     return app

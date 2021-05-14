@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% from "macros.html" import form_errors with context %}
+{% from "macros.html" import flask_flashes with context %}
+
+{% block title %}Register{% endblock %}
+
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5 justify-content-center text-center">
+            <div class="col-5-lg">
+                <div class="reg-form">
+                    <form class="form-reg" method="POST" action="/register">
+                        <h2 class="text-center mb-3">Регистрация</h2>
+                        <div class="form-group">
+                            {{ form.username(placeholder="Имя пользователя", class="form-control form-control-lg") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email(placeholder="Электронная почта", class="form-control form-control-lg") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.password(placeholder="Пароль", class="form-control form-control-lg") }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Зарегистрироваться</button>
+                        </div>
+                    </form>
+                </div>
+                <p class="text-lg-center mt-2"><a href="{{ url_for('login.login') }}">Вернуться на авторизацию</a></p>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-center text-center">
+            <div class="col-5-lg">
+                <div>
+                    {{ form_errors() }}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-center text-center">
+            <div class="col-5-lg">
+                <div>
+                    {{ flask_flashes() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

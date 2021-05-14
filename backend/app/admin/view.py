@@ -57,7 +57,7 @@ class UserModelView(MyModelView):
         }
     }
 
-    column_searchable_list = ("name",)
+    column_searchable_list = ("username",)
 
     @action('refresh_token', 'Refresh Token', 'Обновить токен(-ы)?')
     def action_refresh_token(self, ids):

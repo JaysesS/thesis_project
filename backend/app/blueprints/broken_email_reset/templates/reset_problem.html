@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% from "macros.html" import form_errors with context %}
+{% from "macros.html" import flask_flashes with context %}
+
+{% block title %}Reset Problem{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5 justify-content-center text-center">
+            <div class="col-5-lg">
+                <div class="login-form">
+                    <form class="form-signin" method="POST" action="/reset_problem/">
+                        <h2 class="text-center mb-3">Восстановление пароля</h2>
+                        <div class="form-group">
+                            {{ form.username(placeholder="Имя пользователя", class="form-control form-control-lg") }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.email(placeholder="Почта", class="form-control form-control-lg") }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Войти</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-center text-center">
+            <div class="col-6-lg">
+                <div>
+                    {{ form_errors() }}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-center text-center">
+            <div class="col-6-lg">
+                <div>
+                    {{ flask_flashes() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
