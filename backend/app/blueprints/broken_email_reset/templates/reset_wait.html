@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% from "macros.html" import form_errors with context %}
+{% from "macros.html" import flask_flashes with context %}
+
+{% block title %}Reset Problem{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5 justify-content-center text-center">
+            <div class="col-5-lg">
+                <div class="page-form">
+                    {% if state == 1 %}
+                        <h2>Вам было отправлено письмо на почтовый ящик!</h2>
+                    {% elif state == 2 %}
+                        <div class="login-form">
+                            {% if is_vuln %}
+                                <form class="form-signin" method="POST" action="/reset_problem/vuln/reset">
+                            {% else %}
+                                <form class="form-signin" method="POST" action="/reset_problem/secure/reset">
+                            {% endif %}
+                                <h2 class="text-center mb-3">Смена пароля</h2>
+                                <div class="form-group">
+                                    {{ form.password(placeholder="Пароль", class="form-control form-control-lg") }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.password_second(placeholder="Пароль", class="form-control form-control-lg") }}
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block">Сменить</button>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-center text-center">
+            <div class="col-6-lg">
+                <div>
+                    {{ form_errors() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

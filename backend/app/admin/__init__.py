@@ -15,16 +15,13 @@ def _init_instance(cls, list_name):
 def _init_catalogs(test=False):
     role = _init_instance(Role, ('manager', 'admin'))
     if test:
-        admin_user = User.get_user_by_username(username="admin") #User.query.filter_by(username='admin').first()
+        admin_user = User.get_user_by_username(username="admin")
         if not admin_user:
-            admin_user = User(username='admin')
-        admin_user.set_password('123')
+            admin_user = User.register_user(username = "admin", password = "123", email = "admin@mail.ru")
     else:
         admin_user = User.get_user_by_username(username=os.environ.get("POSTGRES_USER"))
         if not admin_user:
-            admin_user = User(username=os.environ.get("POSTGRES_USER"))
-        admin_user.set_password(os.environ.get("POSTGRES_PASSWORD"))
-    
+            admin_user = User.register_user(username = os.environ.get("POSTGRES_USER"), password = os.environ.get("POSTGRES_PASSWORD"), email = "admin@mail.ru")
     if role not in admin_user.roles:
         admin_user.roles.append(role)
     db.session.add(admin_user)

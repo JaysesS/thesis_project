@@ -44,6 +44,7 @@ class Register(MethodView):
     def post(self):
         form = RegisterForm()
         if form.validate_on_submit():
+            print("good")
             User.register_user(**form.to_dict())
             return redirect(url_for("login.login"))
         return render_template("register.html", form = form)

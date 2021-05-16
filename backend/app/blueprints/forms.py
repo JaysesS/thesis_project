@@ -25,11 +25,13 @@ class UsernameForm(BaseForm):
 
     def validate_username(self, field):
         self._user = self.get_user_by_username()
-        if self._user:
-            if self._register:
+
+        if self._register:
+            if self._user is not None:
                 raise ValidationError("Пользователь с таким логином уже зарегистрирован")
         else:
-            raise ValidationError('Пользователь не найден')
+            if self._user is None:
+                raise ValidationError('Пользователь не найден')
 
 class PasswordForm(BaseForm):
 
@@ -48,16 +50,31 @@ class EmailForm(BaseForm):
         return User.get_user_by_email(self.email.data)
 
     def validate_email(self, field):
-        user = self.get_user_by_email()
-        if user:
-            if self._register:
-                raise ValidationError("Пользователь с такой почтой уже зарегистрирован")
-            else:
-                raise ValidationError('Пользователь c такой почтой не найден')
+        self._user = self.get_user_by_email()
+        if self._register and self._user:
+            raise ValidationError("Пользователь с такой почтой уже зарегистрирован")
+        elif self._user is None and not self._register:
+            raise ValidationError('Пользователь c такой почтой не найден')
 
 
 class ResetForm(UsernameForm, EmailForm):
     """ Reset Form """
+
+class ResetPasswordsForm(BaseForm):
+
+    _register = True
+    password = PasswordField("Password", validators=[InputRequired()])
+    password_second = PasswordField("Password", validators=[InputRequired()])
+
+    def validate(self):
+        rv = FlaskForm.validate(self)
+        if not rv:
+            return False
+        if self.password.data != self.password_second.data:
+            self.password.errors.append('Пароли не совпадают!')
+            return False
+
+        return True
 
 
 class LoginForm(UsernameForm, PasswordForm):

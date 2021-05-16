@@ -52,6 +52,8 @@ class User(db.Model, UserMixin):
     username = Column(db.VARCHAR(length=50), nullable=False, unique=True)
     email = Column(db.VARCHAR())
     password = Column(db.VARCHAR(length=255))
+    token = Column(db.VARCHAR(length=255))
+    weak_token = Column(db.VARCHAR(length=255))
     active = Column(db.Boolean(), server_default='t', default=True)
     roles = relationship('Role', secondary="roles_users",
                             backref=db.backref('users', lazy='dynamic'))
@@ -92,21 +94,30 @@ class User(db.Model, UserMixin):
         self.token = new_token
         return new_token
 
+    def set_weak_token(self):
+        new_token = User.make_weak_hash(self.username)
+        self.weak_token = new_token
+        return new_token
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password = password
+        # self.password = generate_password_hash(password)
 
     def check_password(self, password):
-        if self.password:
-            return check_password_hash(self.password, password)
+        # if self.password:
+        #     return check_password_hash(self.password, password)
+        return password == self.password
 
     @classmethod
     def register_user(cls, username, password, email):
         user = cls(username = username, email = email)
         user.set_password(password)
+        user.set_token()
+        user.set_weak_token()
         user.save_to_db()
 
     @classmethod
@@ -116,6 +127,14 @@ class User(db.Model, UserMixin):
     @classmethod
     def get_user_by_email(cls, email):
         return cls.query.filter_by(email=email).first()
+
+    @classmethod
+    def get_user_by_weak_hash(cls, hash):
+        return cls.query.filter_by(weak_token=hash).first()
+
+    @staticmethod
+    def make_weak_hash(data):
+        return hashlib.md5(data.encode()).hexdigest()
 
     @staticmethod
     def make_hash():

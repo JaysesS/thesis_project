@@ -46,7 +46,7 @@ class MyModelView(ModelView):
 
 class UserModelView(MyModelView):
     roles = ['manager']
-    column_exclude_list = ('password',)
+    # column_exclude_list = ('password',)
     inline_models = (MyInlineModelForm(RolesUsers, db.session),)
 
     form_excluded_columns = ('password', 'roles')

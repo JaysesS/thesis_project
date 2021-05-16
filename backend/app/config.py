@@ -6,6 +6,7 @@ class Config:
     DEBUG = False
     LOCAL = False
     SECRET_KEY = os.urandom(128)
+    JWT_KEY = os.urandom(128)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEST_WORD = "THIS IS DEV CONFIG?"
     FLASK_ADMIN_SWATCH = 'superhero'
@@ -17,7 +18,8 @@ class Config:
         "pool_pre_ping": True,
         "pool_reset_on_return": "rollback",
     }
-
+    HOST_IP = os.environ.get("HOST_IP", "127.0.0.1:5000")
+    
     def __init__(self) -> None:
         self.SQLALCHEMY_DATABASE_URI = self.get_database_uri(local = self.LOCAL)
 
@@ -41,7 +43,7 @@ class TestConfig(Config):
 
     LOCAL = True
     TEST_WORD = "THIS IS TEST CONFIG?"
-    DEBUG = True
+    # DEBUG = True
 
     def __init__(self) -> None:
         super().__init__()

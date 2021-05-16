@@ -4,7 +4,7 @@ from flask_admin.model.form import InlineFormAdmin
 from models import User, Role
 
 class LoginForm(form.Form):
-    name = fields.StringField(validators=[validators.required()])
+    username = fields.StringField(validators=[validators.required()])
     password = fields.PasswordField(validators=[validators.required()])
 
     def validate_name(self, field):
@@ -17,7 +17,7 @@ class LoginForm(form.Form):
             raise validators.ValidationError('Invalid password')
 
     def get_user(self):
-        return User.query.filter_by(name=self.name.data).first()
+        return User.query.filter_by(username=self.username.data).first()
 
 class MyInlineModelForm(InlineFormAdmin):
 
