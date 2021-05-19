@@ -6,11 +6,8 @@ class Config:
     DEBUG = False
     LOCAL = False
     SECRET_KEY = os.urandom(128)
-    JWT_KEY = os.urandom(128)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEST_WORD = "THIS IS DEV CONFIG?"
-    FLASK_ADMIN_SWATCH = 'superhero'
-    FLASK_ADMIN_FLUID_LAYOUT = True
     EXPLAIN_TEMPLATE_LOADING = False
     LOG_DIR = os.path.join(base_dir, 'logs')
     SQLALCHEMY_DATABASE_URI = None
@@ -18,8 +15,6 @@ class Config:
         "pool_pre_ping": True,
         "pool_reset_on_return": "rollback",
     }
-    WTF_CSRF_ENABLED = False
-    HOST_IP = os.environ.get("HOST_IP", "127.0.0.1:5000")
     
     def __init__(self) -> None:
         self.SQLALCHEMY_DATABASE_URI = self.get_database_uri(local = self.LOCAL)
@@ -31,10 +26,10 @@ class Config:
             DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
             DB_NAME = os.environ.get("POSTGRES_DB")
             prefix = "postgresql+psycopg2://"
-            body = f"{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
+            body = f"{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5433/{DB_NAME}"
             uri = f"{prefix}{body}"
         else:
-            uri = "postgresql+psycopg2://jayse_test:test@localhost:5432/test_db"
+            uri = "postgresql+psycopg2://jayse_test:test@localhost:5433/test_db_add"
         return uri
 
 class DevConfig(Config):

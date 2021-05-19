@@ -6,6 +6,10 @@ from flask_admin.contrib.sqla import ModelView
 from flask_security import current_user, utils
 from wtforms import fields
 from models import db, User, RolesUsers, Role
+import logging
+
+
+logger = logging.getLogger("THESIS")
 
 class MyAdminIndexView(AdminIndexView):
 
@@ -19,7 +23,7 @@ class MyAdminIndexView(AdminIndexView):
     def login_view(self):
         # handle user login
         flask_form = LoginForm(request.form)
-        if helpers.validate_form_on_submit(flask_form):
+        if flask_form.validate_on_submit():
             user = flask_form.get_user()
             utils.login_user(user)
         if current_user.is_authenticated:

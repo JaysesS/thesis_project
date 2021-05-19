@@ -1,9 +1,14 @@
 from flask_security import current_user
-from wtforms import form, fields, validators
+from flask_wtf import FlaskForm
+from wtforms import fields, validators
 from flask_admin.model.form import InlineFormAdmin
 from models import User, Role
 
-class LoginForm(form.Form):
+class LoginForm(FlaskForm):
+
+    class Meta:
+        csrf = False
+
     username = fields.StringField(validators=[validators.required()])
     password = fields.PasswordField(validators=[validators.required()])
 

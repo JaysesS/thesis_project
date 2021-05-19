@@ -6,7 +6,7 @@ services:
         
         image: postgres:12
         volumes:
-            - database_data:/var/lib/postgresql
+            - ./database_data:/var/lib/postgresql
         ports:
             - "5432:5432"
         environment:
@@ -15,6 +15,22 @@ services:
             - POSTGRES_DB=${POSTGRES_DB}
         networks:
             - project_network
+
+    database_additional:
+
+        image: postgres:12
+        volumes:
+            - ./database_data_additional:/var/lib/postgresql
+        ports:
+            - "5433:5433"
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER_ADD}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_ADD}
+            - POSTGRES_DB=${POSTGRES_DB_ADD}
+        networks:
+            - project_network
+
+        command: -p 5433
         
     backend: 
 
@@ -23,6 +39,8 @@ services:
         restart: always
         ports:
             - "5000:5000"
+        expose:
+            - "5000"
         command: gunicorn --chdir app --workers 4 --bind 0.0.0.0:5000 -m 007 '${GUNICORN_INSTANCE}'
         depends_on: 
             - database
@@ -36,6 +54,28 @@ services:
         networks:
             - project_network
 
+    backend_additional: 
+
+        build: ./backend_additional
+        container_name: flask_app_additional
+        restart: always
+        ports:
+            - "5100:5100"
+        expose:
+            - "5100"
+        command: gunicorn --chdir app --workers 4 --bind 0.0.0.0:5100 -m 007 '${GUNICORN_INSTANCE}'
+        depends_on: 
+            - database_additional
+        links: 
+            - database_additional
+        environment: 
+            - POSTGRES_HOST=database_additional
+            - POSTGRES_USER=${POSTGRES_USER_ADD}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD_ADD}
+            - POSTGRES_DB=${POSTGRES_DB_ADD}
+        networks:
+            - project_network
+
     nginx:
         build: ./nginx
         container_name: nginx_proxy
@@ -46,10 +86,16 @@ services:
             - "80:80"
         networks:
             - project_network
+            
+        depends_on: 
+            - backend
+            - backend_additional
 
 volumes:
     database_data:
         driver: local
+    database_additional:
+        driver : local
 
 networks:
     project_network:

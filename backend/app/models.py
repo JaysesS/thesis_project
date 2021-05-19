@@ -119,6 +119,7 @@ class User(db.Model, UserMixin):
         user.set_token()
         user.set_weak_token()
         user.save_to_db()
+        return user
 
     @classmethod
     def get_user_by_username(cls, username):

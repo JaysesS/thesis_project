@@ -1,0 +1,69 @@
+{% macro form_errors() -%}
+    {% set errors = form.errors %}
+    {% for key, value in errors.items() %}
+        <div class="alert alert-danger" role="alert">
+            <i class="fa fa-times mr-2" aria-hidden="true"></i>{{ value[0] }}
+        </div>
+    {% endfor %}
+{%- endmacro %}
+
+{% macro flask_flashes() -%}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'danger' %}
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fa fa-times mr-2" aria-hidden="true"></i>{{ message }}
+                    </div>
+                {% elif category == 'success' %}
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-check mr-2" aria-hidden="true"></i>{{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{%- endmacro %}
+
+{% macro main_nav() -%}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">Thesis Project</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/reset_problem">AUTH PROBLEM</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                {% if current_user.is_anonymous %}
+                    <a class="nav-link" href="/login">Авторизация</a>
+                {% else %}
+                    <a class="nav-link" href="/logout">Выйти</a>
+                {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+{%- endmacro %}
+
+{% macro user_nav() -%}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav mx-auto">
+                <li class="nav-item"><a class="nav-item">Текущий пользователь:
+                        {% if current_user.is_anonymous %}
+                            Гость
+                        {% else %}
+                            {{ current_user.username }}
+                        {% endif %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{%- endmacro %}
