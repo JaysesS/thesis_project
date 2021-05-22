@@ -5,8 +5,9 @@ class Config:
 
     DEBUG = False
     LOCAL = False
-    SECRET_KEY = os.urandom(128)
-    JWT_KEY = os.urandom(128)
+    APP_PREFIX = '/backend'
+    SECRET_KEY = "DEV_SUPER_KEY"
+    JWT_KEY = "DEV_JWT_KEY"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEST_WORD = "THIS IS DEV CONFIG?"
     FLASK_ADMIN_SWATCH = 'superhero'
@@ -19,7 +20,7 @@ class Config:
         "pool_reset_on_return": "rollback",
     }
     WTF_CSRF_ENABLED = False
-    HOST_IP = os.environ.get("HOST_IP", "127.0.0.1:5000")
+    HOST_IP = os.environ.get("HOST_IP", f"{os.environ.get('APP_HOST')}:5000")
     
     def __init__(self) -> None:
         self.SQLALCHEMY_DATABASE_URI = self.get_database_uri(local = self.LOCAL)
@@ -44,6 +45,7 @@ class TestConfig(Config):
 
     LOCAL = True
     TEST_WORD = "THIS IS TEST CONFIG?"
+    HOST_IP = os.environ.get("HOST_IP", "127.0.0.1:5000")
     # DEBUG = True
 
     def __init__(self) -> None:

@@ -28,6 +28,6 @@ def _init_catalogs(test=False):
     db.session.commit()
 
 def init_admin(app):
-    index_view = MyAdminIndexView(url='/admin/')
+    index_view = MyAdminIndexView(url=f'{app.config.get("APP_PREFIX")}/admin/')
     admin = flask_admin.Admin(app, index_view = index_view, base_template = '_master.html', template_mode = 'bootstrap4')
     admin.add_views(*init_views())

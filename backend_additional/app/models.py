@@ -3,7 +3,7 @@ from flask_security import UserMixin, RoleMixin
 from sqlalchemy import Column, UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy import MetaData
-import hashlib, os
+import hashlib, os, uuid
 
 naming_convention = {
     "ix": 'ix_%(column_0_label)s',
@@ -30,9 +30,8 @@ class User(db.Model, UserMixin):
         return f"{type(self).__name__} <{self.username}>"
 
     def set_token(self):
-        new_token = User.make_hash()
-        self.token = new_token
-        return new_token
+        self.token = uuid.uuid4()
+        self.save_to_db()
 
     def save_to_db(self):
         db.session.add(self)
@@ -55,10 +54,6 @@ class User(db.Model, UserMixin):
     @classmethod
     def get_user_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
-
-    @staticmethod
-    def make_hash():
-        return hashlib.md5(os.urandom(100)).hexdigest()
 
 class RolesUsers(db.Model):
 

@@ -46,7 +46,8 @@ services:
             - database
         links: 
             - database
-        environment: 
+        environment:
+            - APP_HOST=backend
             - POSTGRES_HOST=database
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

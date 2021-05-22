@@ -14,9 +14,9 @@
                     {% elif state == 2 %}
                         <div class="login-form">
                             {% if is_vuln %}
-                                <form class="form-signin" method="POST" action="/reset_problem/vuln/reset">
+                                <form class="form-signin" method="POST" action="{{ url_for('reset.reset_password_vuln') }}">
                             {% else %}
-                                <form class="form-signin" method="POST" action="/reset_problem/secure/reset">
+                                <form class="form-signin" method="POST" action="{{ url_for('reset.reset_password_secure') }}">
                             {% endif %}
                                 <h2 class="text-center mb-3">Смена пароля</h2>
                                 <div class="form-group">

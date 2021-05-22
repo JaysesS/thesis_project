@@ -11,4 +11,4 @@ from app import create_test_app
 
 if __name__ == "__main__":
     app = create_test_app()
-    app.run()
+    app.run(port=5100)

@@ -2,9 +2,9 @@ from logging import getLogger
 from flask.views import MethodView
 from flask import Blueprint, redirect, url_for, render_template
 from flask_security import current_user, logout_user, login_user
-from flask import session
 
 from blueprints.forms import LoginForm, RegisterForm
+from blueprints.helpers import login_required
 from models import User
 
 logger = getLogger("THESIS_ADDITIONAL")
@@ -50,9 +50,9 @@ class Logout(MethodView):
     
     methods = ['GET']
 
+    @login_required
     def get(self):
         logout_user()
-        session.clear()
         return redirect(url_for('login.login'))
 
 login_page = Login.as_view('login')

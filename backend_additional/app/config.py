@@ -1,11 +1,14 @@
 import os
+from flask import url_for
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
 class Config:
 
     DEBUG = False
     LOCAL = False
-    SECRET_KEY = os.urandom(128)
+    APP_PREFIX = '/backend_additional'
+    SECRET_KEY = "TEST_SUPER_KEY"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEST_WORD = "THIS IS DEV CONFIG?"
     EXPLAIN_TEMPLATE_LOADING = False
@@ -39,7 +42,7 @@ class TestConfig(Config):
 
     LOCAL = True
     TEST_WORD = "THIS IS TEST CONFIG?"
-    # DEBUG = True
+    DEBUG = True
 
     def __init__(self) -> None:
         super().__init__()
