@@ -3,7 +3,7 @@ from flask_admin import AdminIndexView, expose, helpers
 from flask_admin.actions import action
 from admin.form import MyInlineModelForm, LoginForm
 from flask_admin.contrib.sqla import ModelView
-from flask_security import current_user, utils
+from flask_security import current_user, login_user, logout_user
 from wtforms import fields
 from models import db, User, RolesUsers, Role
 import logging
@@ -25,7 +25,8 @@ class MyAdminIndexView(AdminIndexView):
         flask_form = LoginForm(request.form)
         if flask_form.validate_on_submit():
             user = flask_form.get_user()
-            utils.login_user(user)
+            if user and user.password == flask_form.password.data:
+                login_user(user)
         if current_user.is_authenticated:
             return redirect(url_for('.index'))
         self._template_args['flask_form'] = flask_form
@@ -33,7 +34,7 @@ class MyAdminIndexView(AdminIndexView):
 
     @expose('/logout/')
     def logout_view(self):
-        utils.logout_user()
+        logout_user()
         return redirect(url_for('.index'))
 
 class MyModelView(ModelView):

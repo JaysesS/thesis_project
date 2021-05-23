@@ -18,6 +18,7 @@ class Config:
         "pool_pre_ping": True,
         "pool_reset_on_return": "rollback",
     }
+    MAIN_ACCESS_TOKEN = "904450db12c115c080b9a2a0853ebe7e6af2ced6543c8b9c28e3cfdd"
     
     def __init__(self) -> None:
         self.SQLALCHEMY_DATABASE_URI = self.get_database_uri(local = self.LOCAL)

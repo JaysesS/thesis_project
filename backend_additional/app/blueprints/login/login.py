@@ -20,6 +20,8 @@ class Login(MethodView):
     methods = ['GET', 'POST']
 
     def get(self):
+        if not current_user.is_anonymous:
+            return redirect(url_for('imitation.imitation'))
         form = LoginForm()
         return render_template("login.html", form = form)
 
@@ -36,6 +38,8 @@ class Register(MethodView):
     methods = ['GET', 'POST']
 
     def get(self):
+        if not current_user.is_anonymous:
+            return redirect(url_for('imitation.imitation'))
         form = RegisterForm()
         return render_template("register.html", form = form)
 

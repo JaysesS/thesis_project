@@ -55,6 +55,7 @@ class User(db.Model, UserMixin):
     def get_user_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
 
+
 class RolesUsers(db.Model):
 
     id = Column(db.Integer(), primary_key=True)

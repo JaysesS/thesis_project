@@ -17,6 +17,7 @@ naming_convention = {
 
 db = SQLAlchemy(metadata=MetaData(naming_convention=naming_convention))
 
+
 class RolesUsers(db.Model):
 
     id = Column(db.Integer(), primary_key=True)
@@ -46,11 +47,12 @@ class Role(db.Model, RoleMixin):
     def __hash__(self):
         return hash(self.name)
 
+
 class User(db.Model, UserMixin):
 
     id = Column(db.INTEGER(), nullable=False, primary_key=True)
     username = Column(db.VARCHAR(length=50), nullable=False, unique=True)
-    email = Column(db.VARCHAR())
+    email = Column(db.VARCHAR(length=255))
     password = Column(db.VARCHAR(length=255))
     token = Column(db.VARCHAR(length=255))
     weak_token = Column(db.VARCHAR(length=255))
@@ -111,6 +113,7 @@ class User(db.Model, UserMixin):
         # if self.password:
         #     return check_password_hash(self.password, password)
         return password == self.password
+
 
     @classmethod
     def register_user(cls, username, password, email):

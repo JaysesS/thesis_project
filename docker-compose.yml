@@ -94,9 +94,9 @@ services:
 
 volumes:
     database_data:
-        driver: local
+        external: true
     database_additional:
-        driver : local
+        external: true
 
 networks:
     project_network:

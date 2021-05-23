@@ -20,7 +20,8 @@ class Config:
         "pool_reset_on_return": "rollback",
     }
     WTF_CSRF_ENABLED = False
-    HOST_IP = os.environ.get("HOST_IP", f"{os.environ.get('APP_HOST')}:5000")
+    HOST_NAME = "http://thesis.project.com"#os.environ.get("HOST_IP", f"{os.environ.get('APP_HOST')}:5000")
+    BACKEND_ADDITIONAL_TOKEN = "904450db12c115c080b9a2a0853ebe7e6af2ced6543c8b9c28e3cfdd"
     
     def __init__(self) -> None:
         self.SQLALCHEMY_DATABASE_URI = self.get_database_uri(local = self.LOCAL)
@@ -46,7 +47,7 @@ class TestConfig(Config):
     LOCAL = True
     TEST_WORD = "THIS IS TEST CONFIG?"
     HOST_IP = os.environ.get("HOST_IP", "127.0.0.1:5000")
-    # DEBUG = True
+    DEBUG = True
 
     def __init__(self) -> None:
         super().__init__()

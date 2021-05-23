@@ -1,5 +1,6 @@
+from os import access
 from flask.views import MethodView
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, current_app, json, jsonify, request
 from flask_security import current_user
 from blueprints.helpers import login_required
 from models import User
@@ -32,6 +33,9 @@ class OutsideApiUser(MethodView):
 
     def get(self):
         data = request.args
+        access_token = data.get("access_token")
+        if access_token != current_app.config.get("MAIN_ACCESS_TOKEN"):
+            return jsonify(status=False, message = "Incorrect access token!")
         user = User.get_user_by_username(data.get("username"))
         if user.token == data.get("token"):
             return jsonify(status=True, verify = True)

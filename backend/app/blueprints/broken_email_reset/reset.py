@@ -29,6 +29,8 @@ class ResetBase(MethodView):
     is_vuln = False
     
     def get(self):
+        if not current_user.is_anonymous:
+            return redirect(url_for('login.logout'))
         form = ResetForm()
         return render_template("reset_problem.html", is_vuln = self.is_vuln, form = form)
 
@@ -48,7 +50,7 @@ class ResetVuln(ResetBase):
             user = User.get_user_by_username(data.get('username'))
             email = user.email
             hash = user.weak_token
-            reset_url = f"http://{current_app.config.get('HOST_IP')}{current_app.config.get('APP_PREFIX')}/reset_problem/vuln/reset/{hash}"
+            reset_url = f"{current_app.config.get('HOST_NAME')}{current_app.config.get('APP_PREFIX')}/reset_problem/vuln/reset/{hash}"
             
             template = render_template("email_template.html", reset_password_link = reset_url)
             send_email(subject="Thesis project | Reset password", body_text="", html = template, to_addr=email)
@@ -75,7 +77,7 @@ class ResetSecurity(ResetBase):
                 current_app.config.get("JWT_KEY")
             )
 
-            reset_url = f"http://{current_app.config.get('HOST_IP')}{current_app.config.get('APP_PREFIX')}/reset_problem/secure/reset/{jwt_payload}"
+            reset_url = f"{current_app.config.get('HOST_NAME')}{current_app.config.get('APP_PREFIX')}/reset_problem/secure/reset/{jwt_payload}"
 
             template = render_template("email_template.html", reset_password_link = reset_url)
             send_email(subject="Thesis project | Reset password", body_text="", html = template, to_addr=email)
