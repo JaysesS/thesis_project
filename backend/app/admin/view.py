@@ -25,6 +25,7 @@ class MyAdminIndexView(AdminIndexView):
         flask_form = LoginForm(request.form)
         if flask_form.validate_on_submit():
             user = flask_form.get_user()
+            print(user)
             if user and user.password == flask_form.password.data:
                 login_user(user)
         if current_user.is_authenticated:

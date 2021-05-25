@@ -28,14 +28,18 @@ class Config:
 
     def get_database_uri(self, local = False):
         if not local:
-            DB_HOST = os.environ.get("POSTGRES_HOST")
-            DB_USER = os.environ.get("POSTGRES_USER")
-            DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
-            DB_NAME = os.environ.get("POSTGRES_DB")
+            self.DB_HOST = os.environ.get("POSTGRES_HOST")
+            self.DB_USER = os.environ.get("POSTGRES_USER")
+            self.DB_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
+            self.DB_NAME = os.environ.get("POSTGRES_DB")
             prefix = "postgresql+psycopg2://"
-            body = f"{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
+            body = f"{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:5432/{self.DB_NAME}"
             uri = f"{prefix}{body}"
         else:
+            self.DB_HOST = "localhost"
+            self.DB_USER = "jayse_test"
+            self.DB_PASSWORD = "test"
+            self.DB_NAME = "test_db"
             uri = "postgresql+psycopg2://jayse_test:test@localhost:5432/test_db"
         return uri
 
