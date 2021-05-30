@@ -114,6 +114,9 @@ class User(db.Model, UserMixin):
         #     return check_password_hash(self.password, password)
         return password == self.password
 
+    def to_list(self):
+        fields =  [getattr(self, c.name) for c in self.__table__.columns]
+        return fields
 
     @classmethod
     def register_user(cls, username, password, email):

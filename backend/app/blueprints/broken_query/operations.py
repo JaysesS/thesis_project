@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2.sql import SQL
+from psycopg2 import sql
 from functools import wraps
 from flask import current_app
 
@@ -23,17 +23,12 @@ def connect_db(func):
     return _wrapper
 
 @connect_db
-def check(cursor = None):
-    cursor.execute(SQL('SELECT * from public.user where username=\'{}\' and password=\'{}\';'.format("admin'--", 'lol')))
+def sqli_query(username, password, cursor = None):
+    cursor.execute(
+        sql.SQL('SELECT * FROM public.user \
+             WHERE username=\'{}\' and password=\'{}\';'\
+             .format(username, password)
+            )
+        )
     result = cursor.fetchall()
-    print('sqli?')
-    for r in result:
-        print(r)
-
-    cursor.execute(SQL('SELECT * from public.user where username=\'{}\' and password=\'{}\';'.format("jayse", '2222')))
-    result = cursor.fetchall()
-    print('norm?')
-    for r in result:
-        print(r)
-
-    return True
+    return result

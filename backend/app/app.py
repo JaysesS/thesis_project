@@ -10,9 +10,10 @@ from logger_config import init_logger
 
 from blueprints.index.index import index_bp
 from blueprints.api.api_local import api_bp
-from blueprints.broken_email_reset.reset import reset_bp
 from blueprints.login.login import login_bp
-from blueprints.broken_sqli.broken_sqli import sqli_bp
+from blueprints.broken_email_reset.reset import reset_bp
+from blueprints.broken_query.broken_query import sqli_bp
+from blueprints.broken_comments.broken_comments import xss_bp
 
 def create_app():
     
@@ -33,13 +34,13 @@ def create_app():
         _init_catalogs(test=False)
 
     # Register blueprints
-    
-    
-    app.register_blueprint(index_bp, url_prefix = app.config.get("APP_PREFIX"))
-    app.register_blueprint(reset_bp, url_prefix = app.config.get("APP_PREFIX"))
-    app.register_blueprint(login_bp, url_prefix = app.config.get("APP_PREFIX"))
-    app.register_blueprint(sqli_bp, url_prefix = app.config.get("APP_PREFIX"))
+
     app.register_blueprint(api_bp, url_prefix = app.config.get("APP_PREFIX") + "/api")
+    app.register_blueprint(index_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(login_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(reset_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(sqli_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(xss_bp, url_prefix = app.config.get("APP_PREFIX"))
     
     # Init modules
     init_login(app)
@@ -67,11 +68,13 @@ def create_test_app():
         _init_catalogs(test=True)
 
     # Register blueprints
-    app.register_blueprint(index_bp, url_prefix = app.config.get("APP_PREFIX"))
-    app.register_blueprint(reset_bp, url_prefix = app.config.get("APP_PREFIX"))
-    app.register_blueprint(login_bp, url_prefix = app.config.get("APP_PREFIX"))
-    app.register_blueprint(sqli_bp, url_prefix = app.config.get("APP_PREFIX"))
+    
     app.register_blueprint(api_bp, url_prefix = app.config.get("APP_PREFIX") + "/api")
+    app.register_blueprint(index_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(login_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(reset_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(sqli_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(xss_bp, url_prefix = app.config.get("APP_PREFIX"))
 
     # Init modules
     init_login(app)
