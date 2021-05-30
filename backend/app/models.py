@@ -118,6 +118,10 @@ class User(db.Model, UserMixin):
         fields =  [getattr(self, c.name) for c in self.__table__.columns]
         return fields
 
+    def to_dict(self):
+        fields =  {c.name : getattr(self, c.name) for c in self.__table__.columns}
+        return fields
+
     @classmethod
     def register_user(cls, username, password, email):
         user = cls(username = username, email = email)
@@ -146,3 +150,35 @@ class User(db.Model, UserMixin):
     @staticmethod
     def make_hash():
         return hashlib.md5(os.urandom(100)).hexdigest()
+
+class Post(db.Model):
+
+    id = Column(db.INTEGER(), nullable=False, primary_key=True)
+    author = Column(db.TEXT(), nullable=False)
+    text = Column(db.TEXT(), nullable=False)
+
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def to_json(self, ignore = None):
+        ignore = ignore or ["id"]
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns if c.name not in ignore}
+
+    @classmethod
+    def register_post(cls, author, text):
+        post = Post(
+            author = author,
+            text = text
+        )
+        post.save_to_db()
+
+    @classmethod
+    def get_all(cls):
+        posts = Post.query.all()
+        return [post.to_json() for post in posts]
+
+    @classmethod
+    def remove_all(cls):
+        Post.query.delete()
+        db.session.commit()

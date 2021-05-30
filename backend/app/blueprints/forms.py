@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, TextAreaField
 from wtforms.validators import InputRequired,ValidationError
 
 from models import User
@@ -85,3 +85,9 @@ class RegisterForm(UsernameForm, PasswordForm, EmailForm):
     """ Register Form """
 
     _register = True
+
+
+class PostForm(BaseForm):
+
+    author = StringField("Author", validators=[InputRequired()])
+    text = TextAreaField('Comment', validators = [InputRequired()])

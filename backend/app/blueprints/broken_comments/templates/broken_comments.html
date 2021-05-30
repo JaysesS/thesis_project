@@ -4,16 +4,52 @@
 {% block title %}XSS Demo{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <div class="row mt-5 justify-content-center text-center">
+<div class="container">
+    <div class="row mt-5 justify-content-center text-center">
+        <div class="col-8">
             <h2>XSS</h2>
-        </div>
-        <div class="row mt-2 justify-content-center text-center">
-            <div class="col-6-lg">
-                <div>
-                    {{ flask_flashes() }}
-                </div>
+            <div class="mt-5">
+                <form method="POST" action="{{ url_for('xss.xss_post') }}">
+                    <div class="form-group">
+                        <label for="textArea" class="float-left">Введите ваш комментарий:</label>
+                        {{ form.text(placeholder="Ваш комментарий..", class="form-control")}}
+                    </div>
+                    <div class="form-group">
+                        <div class="d-flex flex-row justify-content-between">
+                            <div class="float-left">
+                                <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+                            </div>
+                            <div class="float-auto">
+                                {{ form.author(placeholder="Ваше имя..", class="form-control")}}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-2">
+                <form method="POST" action="{{ url_for('xss.xss_post_delete') }}">
+                    <div class="form-group float-left">
+                        <button type="submit" class="btn btn-danger">Очистить комментарии</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+    {% autoescape false %}
+    <div class="row justify-content-center text-center">
+        <div class="col-8">
+            <div class="d-flex flex-row flex-wrap justify-content-between mb-3">
+                {% for comment in comments %}
+                    <div class="card text-white bg-primary mb-3 w-100" style="max-width: 18rem;">
+                        <div class="card-header">{{ comment.author }}</div>
+                        <div class="card-body">
+                            <p class="card-text">{{ comment.text }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endautoescape %}
+</div>
 {% endblock %}

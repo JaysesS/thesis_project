@@ -22,6 +22,12 @@ class Config:
     WTF_CSRF_ENABLED = False
     HOST_NAME = "http://thesis.project.com"#os.environ.get("HOST_IP", f"{os.environ.get('APP_HOST')}:5000")
     BACKEND_ADDITIONAL_TOKEN = "904450db12c115c080b9a2a0853ebe7e6af2ced6543c8b9c28e3cfdd"
+
+    # for xss
+    SESSION_COOKIE_SECURE = False
+    REMEMBER_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = False
+    REMEMBER_COOKIE_HTTPONLY = True
     
     def __init__(self) -> None:
         self.SQLALCHEMY_DATABASE_URI = self.get_database_uri(local = self.LOCAL)
