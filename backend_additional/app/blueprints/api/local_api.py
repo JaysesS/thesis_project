@@ -37,7 +37,7 @@ class OutsideApiUser(MethodView):
         if access_token != current_app.config.get("MAIN_ACCESS_TOKEN"):
             return jsonify(status=False, message = "Incorrect access token!")
         user = User.get_user_by_username(data.get("username"))
-        if user.token == data.get("token"):
+        if user and user.token == data.get("token"):
             return jsonify(status=True, verify = True)
         return jsonify(status=True, verify = False)
 

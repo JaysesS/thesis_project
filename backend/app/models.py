@@ -123,11 +123,14 @@ class User(db.Model, UserMixin):
         return fields
 
     @classmethod
-    def register_user(cls, username, password, email):
+    def register_user(cls, username, password, email, role_name = None):
         user = cls(username = username, email = email)
         user.set_password(password)
         user.set_token()
         user.set_weak_token()
+        if role_name:
+            role = Role.get_role_by_name(role_name)
+            user.roles.append(role)
         user.save_to_db()
         return user
 

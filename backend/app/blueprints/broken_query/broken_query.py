@@ -46,4 +46,4 @@ class SQLiDemostration(MethodView):
 
 index_sql = SQLiDemostration.as_view('sqli_index')
 
-sqli_bp.add_url_rule("/sqli", view_func=index_sql)
+sqli_bp.add_url_rule("/sqli/", view_func=index_sql)

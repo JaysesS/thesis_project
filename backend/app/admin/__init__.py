@@ -13,7 +13,7 @@ def _init_instance(cls, list_name):
     return instance
 
 def _init_catalogs(test=False):
-    role = _init_instance(Role, ('manager', 'admin'))
+    role = _init_instance(Role, ('manager', 'student', 'admin'))
     if test:
         admin_user = User.get_user_by_username(username="admin")
         if not admin_user:

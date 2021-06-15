@@ -9,6 +9,7 @@ from admin import init_admin, _init_catalogs
 from logger_config import init_logger
 
 from blueprints.index.index import index_bp
+from blueprints.check_role.check_role import check_role_bp
 from blueprints.api.api_local import api_bp
 from blueprints.login.login import login_bp
 from blueprints.broken_email_reset.reset import reset_bp
@@ -37,6 +38,7 @@ def create_app():
 
     app.register_blueprint(api_bp, url_prefix = app.config.get("APP_PREFIX") + "/api")
     app.register_blueprint(index_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(check_role_bp, url_prefix = app.config.get("APP_PREFIX"))
     app.register_blueprint(login_bp, url_prefix = app.config.get("APP_PREFIX"))
     app.register_blueprint(reset_bp, url_prefix = app.config.get("APP_PREFIX"))
     app.register_blueprint(sqli_bp, url_prefix = app.config.get("APP_PREFIX"))
@@ -71,6 +73,7 @@ def create_test_app():
     
     app.register_blueprint(api_bp, url_prefix = app.config.get("APP_PREFIX") + "/api")
     app.register_blueprint(index_bp, url_prefix = app.config.get("APP_PREFIX"))
+    app.register_blueprint(check_role_bp, url_prefix = app.config.get("APP_PREFIX"))
     app.register_blueprint(login_bp, url_prefix = app.config.get("APP_PREFIX"))
     app.register_blueprint(reset_bp, url_prefix = app.config.get("APP_PREFIX"))
     app.register_blueprint(sqli_bp, url_prefix = app.config.get("APP_PREFIX"))

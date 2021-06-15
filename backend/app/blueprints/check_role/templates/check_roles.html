@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% from "macros.html" import flask_flashes with context %}
+
+{% block title %}Role check{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row mt-5 justify-content-center text-center">
+            <div class="col-5-lg">
+                <h2>Страница проверки роли</h2>
+                <div class="mt-5">
+                    <p class="text-monospace h5">Информация для администратора!</p>
+                    <p class="text-monospace">ВКР, 0.В.K. И3-41</p>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-center text-center">
+            <div class="col-6-lg">
+                <div>
+                    {{ flask_flashes() }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

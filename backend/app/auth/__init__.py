@@ -1,5 +1,5 @@
 from flask_security import Security, SQLAlchemyUserDatastore
-from flask import jsonify
+from flask import flash, redirect, url_for
 
 from models import db, User, Role
 
@@ -18,5 +18,5 @@ def init_login(app):
 
     @security.unauthorized_handler
     def unauth_handler():
-        return jsonify(success=False,
-                       message='Authorize please to access this page.'), 403
+        flash("Просмотр данной страницы доступен только администратору!", "danger")
+        return redirect(url_for('index.index'))

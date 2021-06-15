@@ -1,6 +1,7 @@
 from logging import getLogger
 from flask.views import MethodView
 from flask import Blueprint, redirect, url_for, render_template
+from flask_login.utils import login_required
 from flask_security import current_user, logout_user, login_user
 from flask import session
 
@@ -44,7 +45,9 @@ class Register(MethodView):
     def post(self):
         form = RegisterForm()
         if form.validate_on_submit():
-            User.register_user(**form.to_dict())
+            data = form.to_dict()
+            data['role_name'] = 'student'
+            User.register_user(**data)
             return redirect(url_for("login.login"))
         return render_template("register.html", form = form)
 
@@ -52,6 +55,7 @@ class Logout(MethodView):
     
     methods = ['GET']
 
+    @login_required
     def get(self):
         logout_user()
         session.clear()

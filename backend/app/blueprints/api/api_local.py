@@ -12,8 +12,6 @@ api_bp = Blueprint(
                     )
 
 def verify_user(url_path, username, token):
-    if not current_app.config.get("LOCAL"):
-        url_path = "http://backend_additional:5100/"
     url = f"{url_path}backend_additional/api/outside_user"
     res = requests.get(url, params= {
         "access_token" : current_app.config.get("BACKEND_ADDITIONAL_TOKEN"),
@@ -28,8 +26,12 @@ class ServiceView(MethodView):
     
     def get(self):
         data = request.args
+        if not current_app.config.get("LOCAL"):
+            url_path = "http://backend_additional:5100/"
+        else:
+            url_path = request.host_url
         if verify_user(
-            url_path = request.host_url,
+            url_path = url_path,
             username = data.get("username"),
             token = data.get("token")
         ):
