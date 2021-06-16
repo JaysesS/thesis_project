@@ -5,7 +5,7 @@ from admin.form import MyInlineModelForm, LoginForm
 from flask_admin.contrib.sqla import ModelView
 from flask_security import current_user, login_user, logout_user
 from wtforms import fields
-from models import db, User, RolesUsers, Role
+from models import db, User, RolesUsers, Role, Post
 import logging
 
 
@@ -65,16 +65,6 @@ class UserModelView(MyModelView):
 
     column_searchable_list = ("username",)
 
-    @action('refresh_token', 'Refresh Token', 'Обновить токен(-ы)?')
-    def action_refresh_token(self, ids):
-        try:
-            users = User.query.filter(User.id.in_(ids)).all()
-            for user in users:
-                user.set_token()
-                user.save_to_db()
-        except Exception as ex:
-            flash(f'Failed to approve users. {str(ex)}', 'error')
-
     def get_query(self):
         if not current_user.has_role("admin"):
             return super(UserModelView, self).get_query().filter(~self.model.roles.any(Role.name.like('admin')))
@@ -95,7 +85,8 @@ class UserModelView(MyModelView):
 
 model_views_map = [
     (UserModelView, User, dict(category='Пользователи')),
-    (MyModelView, Role, dict(category='Пользователи'))
+    (MyModelView, Role, dict(category='Пользователи')),
+    (MyModelView, Post, dict(category='Комментарии')),
 ]
 
 def init_views():

@@ -34,12 +34,21 @@ class SQLiDemostration(MethodView):
             )
         elif form_type == "secure":
             user = User.get_user_by_username(username)
-            query_result = user.to_list() if user and user.password == password else []
+            query_result = {
+                "data": user.to_list(),
+                "status" : True
+            } if user and user.password == password else {
+                "data": [],
+                "status" : False
+            }
+
         else:
             flash("Зачем менять вид формы?")
-            query_result = ""
-        
-        if isinstance(query_result, list) and len(query_result) == 0:
+            query_result = {
+                "data": [],
+                "status" : False
+            }
+        if not query_result.get('data'):
             flash("Ничего не найдено", "danger")
 
         return render_template("broken_sqli.html", query_result = query_result)

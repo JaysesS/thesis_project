@@ -26,7 +26,7 @@
                         <button type="submit" class="btn btn-primary btn-block">Отправить</button>
                     </form>
                 </div>
-                <div class="col-4-lg">
+                <div class="col-4-lg ml-5">
                     <h4>Secure</h4>
                     <form method="POST" action="{{ url_for('sqli.sqli_index') }}">
                         <div class="invisible">
@@ -45,13 +45,14 @@
             </div>
             <div class="row justify-content-center text-center mt-5">
                 <div class="col">
-                    {% if query_result %}
-                    <div class="card">
-                        <h5 class="card-header bg-primary text-white">Результат запроса:</h5>
-                        <div class="card-body">
-                            <p class="card-text">{{ query_result }}</p>
+                    {% if query_result['data'] %}
+                        <div class="card">
+                            <h5 class="card-header bg-primary text-white">Результат запроса:</h5>
+                            <div class="card-body">
+                                <p class="card-text">Статус выполнения: {{ query_result['status'] }}</p>
+                                <p class="card-text">{{ query_result['data'] }}</p>
+                            </div>
                         </div>
-                    </div>
                     {% endif %}
                 </div>
             </div>

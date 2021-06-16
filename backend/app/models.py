@@ -35,7 +35,7 @@ class Role(db.Model, RoleMixin):
 
     id = Column(db.Integer(), primary_key=True)
     name = Column(db.VARCHAR(80), unique=True)
-    description = Column(db.String(255))
+    description = Column(db.VARCHAR(255))
 
     def __repr__(self):
         return f'{self.name}'
@@ -52,11 +52,11 @@ class User(db.Model, UserMixin):
 
     id = Column(db.INTEGER(), nullable=False, primary_key=True)
     username = Column(db.VARCHAR(length=50), nullable=False, unique=True)
-    email = Column(db.VARCHAR(length=255))
-    password = Column(db.VARCHAR(length=255))
-    token = Column(db.VARCHAR(length=255))
+    email = Column(db.VARCHAR(length=255), nullable=False, unique=True)
+    password = Column(db.VARCHAR(length=255), nullable=False)
     weak_token = Column(db.VARCHAR(length=255))
     active = Column(db.Boolean(), server_default='t', default=True)
+    posts = relationship('Post', backref='users', cascade="all,delete-orphan")
     roles = relationship('Role', secondary="roles_users",
                             backref=db.backref('users', lazy='dynamic'))
 
@@ -91,11 +91,6 @@ class User(db.Model, UserMixin):
             return True
         return False
 
-    def set_token(self):
-        new_token = User.make_hash()
-        self.token = new_token
-        return new_token
-
     def set_weak_token(self):
         new_token = User.make_weak_hash(self.username)
         self.weak_token = new_token
@@ -126,7 +121,6 @@ class User(db.Model, UserMixin):
     def register_user(cls, username, password, email, role_name = None):
         user = cls(username = username, email = email)
         user.set_password(password)
-        user.set_token()
         user.set_weak_token()
         if role_name:
             role = Role.get_role_by_name(role_name)
@@ -150,13 +144,11 @@ class User(db.Model, UserMixin):
     def make_weak_hash(data):
         return hashlib.md5(data.encode()).hexdigest()
 
-    @staticmethod
-    def make_hash():
-        return hashlib.md5(os.urandom(100)).hexdigest()
 
 class Post(db.Model):
 
     id = Column(db.INTEGER(), nullable=False, primary_key=True)
+    user_id = Column(db.Integer(), db.ForeignKey('user.id', ondelete='cascade'), nullable=False)
     author = Column(db.TEXT(), nullable=False)
     text = Column(db.TEXT(), nullable=False)
 
@@ -182,6 +174,7 @@ class Post(db.Model):
         return [post.to_json() for post in posts]
 
     @classmethod
-    def remove_all(cls):
-        Post.query.delete()
+    def remove_all_by_user_id(cls, user_id):
+        posts = Post.query.filter_by(user_id = user_id)
+        posts.delete()
         db.session.commit()
